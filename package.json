@@ -1,0 +1,14 @@
+{
+  "name": "squ1dbrowser",
+  "version": "1.0.0",
+  "description": "A small web browser.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SQU1DMAN6",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^37.2.1"
+  }
+}

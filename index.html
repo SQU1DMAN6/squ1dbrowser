@@ -37,24 +37,18 @@
     let urlvalue = "https://google.com/"
     urlbar.value = urlvalue
 
-    const { ipcRenderer } = require("electron");
-
-    ipcRenderer.on("devtools-open", () => {
-        const renderer = document.querySelector("#renderer");
-        if (renderer.isLoading()) {
-            renderer.addEventListener("dom-ready", () => {
-                renderer.openDevTools();
-            }, { once: true });
-        } else {
-            renderer.openDevTools();
-        }
-    });
-
-    window.addEventListener("keydown", (e) => {
-        if (e.key === "F12") {
-            renderer.openDevTools();
-        }
-    });
+    // window.addEventListener("DOMContentLoaded", () => {
+    //     window.electronAPI.onDevToolsOpen(() => {
+    //         console.log("Meaning devtools is openning")
+    //         if (renderer.isLoading()) {
+    //             console.log("hit is loading")
+    //             renderer.addEventListener('dom-ready', () => renderer.openDevTools(), { once: true });
+    //         } else {
+    //             console.log("hit else and open the Devtools")
+    //             renderer.openDevTools();
+    //         }
+    //     });
+    // });
 
     urlbar.onchange = () => {
         urlvalue = urlbar.value
@@ -83,6 +77,16 @@
 
     window.onload = function () {
         renderer.src = urlvalue
+         window.electronAPI.onDevToolsOpen(() => {
+            console.log("Meaning devtools is openning")
+            if (renderer.isLoading()) {
+                console.log("hit is loading")
+                renderer.addEventListener('dom-ready', () => renderer.openDevTools(), { once: true });
+            } else {
+                console.log("hit else and open the Devtools")
+                renderer.openDevTools();
+            }
+        });
     }
 </script>
 <style>

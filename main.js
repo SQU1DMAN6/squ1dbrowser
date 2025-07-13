@@ -8,14 +8,15 @@ const createWindow = () => {
     minHeight: 600,
     webPreferences: {
       devTools: true,
-      nodeIntegration: true,
+      nodeIntegration: false,
       javascript: true,
       webSecurity: true,
       images: true,
       webgl: true,
       scrollBounce: true,
-      contextIsolation: false,
-      webviewTag: true
+      contextIsolation: true,
+      webviewTag: true,
+      preload: __dirname + "preload.js"
     }
   })
 

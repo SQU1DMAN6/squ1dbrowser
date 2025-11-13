@@ -1,0 +1,3 @@
+/home/qchef/Documents/squ1dbrowser/build/CMakeFiles/squ1d-browser.dir
+/home/qchef/Documents/squ1dbrowser/build/CMakeFiles/edit_cache.dir
+/home/qchef/Documents/squ1dbrowser/build/CMakeFiles/rebuild_cache.dir

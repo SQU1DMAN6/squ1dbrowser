@@ -1,15 +1,26 @@
 {
-  "name": "squ1dbrowser",
-  "version": "1.0.0",
-  "description": "A small web browser.",
-  "main": "main.js",
+  "name": "squ1d-browser",
+  "version": "2.0.0",
+  "description": "A high-performance web browser built from scratch with Rust renderer and C++ UI",
+  "main": "browser-ui/src/main.cpp",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "build": "make all",
+    "build:renderer": "make build-renderer",
+    "build:ui": "make build-ui",
+    "dev": "make dev",
+    "start": "make run-browser",
+    "start:renderer": "make run-renderer",
+    "clean": "make clean"
   },
+  "keywords": [
+    "browser",
+    "web-renderer",
+    "rust",
+    "cpp",
+    "falkon",
+    "macos"
+  ],
   "author": "SQU1DMAN6",
   "license": "MIT",
-  "devDependencies": {
-    "electron": "^37.2.1"
-  }
+  "devDependencies": {}
 }

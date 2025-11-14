@@ -33,8 +33,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         (test_html, 800, 600, "/tmp/squ1d_render.bmp".to_string())
     };
 
-    eprintln!("Parsing HTML...");
-    let doc = HtmlParser::parse(&input)?;
+    // If input starts with '@' treat the rest as a filename and read the HTML from that file
+    let html_source = if input.starts_with('@') {
+        let path = &input[1..];
+        std::fs::read_to_string(path)?
+    } else {
+        input.clone()
+    };
+
+    eprintln!("Parsing HTML... preview: {}", &html_source.chars().take(64).collect::<String>());
+    let doc = HtmlParser::parse(&html_source)?;
 
     eprintln!("Rendering page at {}x{}...", width, height);
     let output = PageRenderer::render(&doc, width, height);

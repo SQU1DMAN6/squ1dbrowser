@@ -112,7 +112,6 @@ pub fn draw_char(framebuffer: &mut [u8], width: u32, height: u32, x: i32, y: i32
     if font_idx * 5 + 5 > BITMAP_FONT_DATA.len() {
         return; // Out of bounds
     }
-    
     let glyph = &BITMAP_FONT_DATA[font_idx * 5..(font_idx + 1) * 5];
     
     for row in 0..5 {
@@ -128,6 +127,54 @@ pub fn draw_char(framebuffer: &mut [u8], width: u32, height: u32, x: i32, y: i32
                         framebuffer[pi + 1] = g;
                         framebuffer[pi + 2] = b;
                         framebuffer[pi + 3] = 255;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Draw a scaled character by expanding each glyph pixel into an SxS block.
+pub fn draw_char_scaled(framebuffer: &mut [u8], width: u32, height: u32, x: i32, y: i32, c: char, r: u8, g: u8, b: u8, scale: u32) {
+    let idx = c as u32 as usize;
+    if idx < 32 || idx > 126 {
+        return;
+    }
+    let font_idx = idx - 32;
+    if font_idx >= 95 { return; }
+
+    if font_idx * 5 + 5 > BITMAP_FONT_DATA.len() {
+        return; // missing glyphs guard
+    }
+    let glyph = &BITMAP_FONT_DATA[font_idx * 5..(font_idx + 1) * 5];
+
+    if scale <= 1 {
+        draw_char(framebuffer, width, height, x, y, c, r, g, b);
+        return;
+    }
+
+    let fw = width as i32;
+    let fh = height as i32;
+    let s = scale as i32;
+
+    for row in 0..5 {
+        let bits = glyph[row];
+        for col in 0..3 {
+            if (bits & (1 << (2 - col))) != 0 {
+                // draw s x s block for this pixel
+                for sy in 0..s {
+                    for sx in 0..s {
+                        let px = x + col as i32 * s + sx;
+                        let py = y + row as i32 * s + sy;
+                        if px >= 0 && px < fw && py >= 0 && py < fh {
+                            let pi = ((py as u32 * width + px as u32) * 4) as usize;
+                            if pi + 3 < framebuffer.len() {
+                                framebuffer[pi] = r;
+                                framebuffer[pi + 1] = g;
+                                framebuffer[pi + 2] = b;
+                                framebuffer[pi + 3] = 255;
+                            }
+                        }
                     }
                 }
             }

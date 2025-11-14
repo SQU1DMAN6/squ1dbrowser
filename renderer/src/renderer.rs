@@ -62,15 +62,22 @@ impl PageRenderer {
     fn draw_text(img: &mut SimpleImage, x: u32, y: u32, text: &str, r: u8, g: u8, b: u8) {
         // Use bitmap font for text rendering
         let mut px = x as i32;
-        let py = y as i32;
-        
+        // baseline offset and scale computed from image width so large outputs get larger glyphs
+        let baseline_offset = 1;
+        // Choose scale proportional to width (800->1, 1600->2, 3200->4 etc.)
+        let mut scale = ((img.width as f32) / 800.0).ceil() as u32;
+        if scale < 1 { scale = 1; }
+        if scale > 8 { scale = 8; }
+
+        let py = y as i32 + (baseline_offset * scale as i32);
+
         for c in text.chars() {
             // Stop if we've gone off the right edge
-            if px + 4 >= img.width as i32 {
+            if px + (3 * scale as i32) >= img.width as i32 {
                 break;
             }
-            crate::bitmap_font::draw_char(&mut img.pixels, img.width, img.height, px, py, c, r, g, b);
-            px += 4; // 3 pixels for char + 1 pixel spacing
+            crate::bitmap_font::draw_char_scaled(&mut img.pixels, img.width, img.height, px, py, c, r, g, b, scale);
+            px += (3 * scale as i32) + (1 * scale as i32); // char width*scale + spacing
         }
     }
 }
